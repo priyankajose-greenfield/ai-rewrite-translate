@@ -85,7 +85,7 @@
     // outputDiv.innerText = `✅ ${data.response || "No response."}`;
 
 const outputTextarea = document.getElementById("inputText");
-outputTextarea.value += ` ${data.response || ""}`;
+outputTextarea.value = ` ${data.response || ""}`;
 outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
     
   } catch (error) {
