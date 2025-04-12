@@ -62,33 +62,34 @@
     const proxy = "https://api.allorigins.win/get?url=";  // Use this proxy URL to bypass CORS
     const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
-    async function callAPI(promptText) {
-      const outputDiv = document.getElementById("output");
-      outputDiv.innerText = "⏳ Processing...";
+   async function callAPI(promptText) {
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerText = "⏳ Processing...";
 
-      try {
-        // Fetch request to the API using the AllOrigins proxy
-        const response = await fetch(proxy + encodeURIComponent(apiUrl), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",  // Allow all origins
-            "Access-Control-Allow-Headers": "Content-Type",
-          },
-          body: JSON.stringify({ prompt: promptText }),
-        });
+  const proxy = "https://cors-anywhere.herokuapp.com/";
+  const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
-        if (!response.ok) {
-          throw new Error(`Status: ${response.status}`);
-        }
+  try {
+    const response = await fetch(proxy + apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt: promptText }),
+    });
 
-        const data = await response.json();
-        outputDiv.innerText = `✅ ${data.answer || "No response."}`;
-      } catch (error) {
-        outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
-        console.error("API Error:", error);
-      }
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
     }
+
+    const data = await response.json();
+    outputDiv.innerText = `✅ ${data.answer || "No response."}`;
+  } catch (error) {
+    outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
+    console.error("API Error:", error);
+  }
+}
+
 
     function rewriteText() {
       const inputText = document.getElementById("inputText").value.trim();
