@@ -58,7 +58,6 @@
   </div>
 
   <script>
-const proxy = "https://api.allorigins.win/get?url=";
 const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
 async function callAPI(promptText) {
@@ -66,12 +65,10 @@ async function callAPI(promptText) {
   outputDiv.innerText = "⏳ Processing...";
 
   try {
-    const response = await fetch(proxy + encodeURIComponent(apiUrl), {
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type"
       },
       body: JSON.stringify({ prompt: promptText }),
     });
@@ -101,7 +98,6 @@ function translateText() {
   const prompt = `Translate text ${inputText} to English. Only give answer.`;
   callAPI(prompt);
 }
-
   </script>
 </body>
 </html>
