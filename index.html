@@ -83,7 +83,12 @@
     }
 
     const data = await response.json();
-    outputDiv.innerText = `✅ ${data.response || "No response."}`;
+    // outputDiv.innerText = `✅ ${data.response || "No response."}`;
+
+const outputTextarea = document.getElementById("inputText");
+outputTextarea.value += ` ${data.response || ""}`;
+outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
+    
   } catch (error) {
     outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
     console.error("API Error:", error);
