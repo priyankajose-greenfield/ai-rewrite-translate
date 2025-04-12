@@ -58,8 +58,8 @@
   </div>
 
   <script>
-    // Use CORS Anywhere as a proxy for CORS issues
-    const proxy = "https://cors-anywhere.herokuapp.com/";  // Use this proxy URL to bypass CORS
+    // Use CORS Anywhere or AllOrigins as a proxy for CORS issues
+    const proxy = "https://api.allorigins.win/get?url=";  // Use this proxy URL to bypass CORS
     const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
     async function callAPI(promptText) {
@@ -67,8 +67,8 @@
       outputDiv.innerText = "⏳ Processing...";
 
       try {
-        // Fetch request to the API using the CORS proxy
-        const response = await fetch(proxy + apiUrl, {
+        // Fetch request to the API using the AllOrigins proxy
+        const response = await fetch(proxy + encodeURIComponent(apiUrl), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
