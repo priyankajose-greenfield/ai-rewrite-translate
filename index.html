@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Rewrite & Translate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f7f7f7;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 10px 15px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    .output {
+      margin-top: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>AI Rewrite & Translate Tool</h2>
+
+  <textarea id="inputText" placeholder="Enter your text here..."></textarea><br>
+
+  <button onclick="sendPrompt('rewrite')">Rewrite with AI</button>
+  <button onclick="sendPrompt('translate')">Translate</button>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    async function sendPrompt(type) {
+      const input = document.getElementById('inputText').value.trim();
+      if (!input) {
+        alert('Please enter some text.');
+        return;
+      }
+
+      let promptText = '';
+      if (type === 'rewrite') {
+        promptText = `Rewrite the statement - ${input}`;
+      } else if (type === 'translate') {
+        promptText = `Translate text ${input} to English. Only give answer.`;
+      }
+
+      const responseArea = document.getElementById('output');
+      responseArea.innerText = 'Loading...';
+
+      try {
+        const response = await fetch('https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: promptText })
+        });
+
+        const data = await response.json();
+        responseArea.innerText = data.answer || JSON.stringify(data);
+      } catch (error) {
+        console.error(error);
+        responseArea.innerText = 'Error calling the API.';
+      }
+    }
+  </script>
+
+</body>
+</html>
