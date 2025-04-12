@@ -58,46 +58,51 @@
   </div>
 
   <script>
-const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
+    // Use CORS Anywhere as a proxy for CORS issues
+    const proxy = "https://cors-anywhere.herokuapp.com/";  // Use this proxy URL to bypass CORS
+    const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
-async function callAPI(promptText) {
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerText = "⏳ Processing...";
+    async function callAPI(promptText) {
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerText = "⏳ Processing...";
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt: promptText }),
-    });
+      try {
+        // Fetch request to the API using the CORS proxy
+        const response = await fetch(proxy + apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",  // Allow all origins
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
+          body: JSON.stringify({ prompt: promptText }),
+        });
 
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        outputDiv.innerText = `✅ ${data.answer || "No response."}`;
+      } catch (error) {
+        outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
+        console.error("API Error:", error);
+      }
     }
 
-    const data = await response.json();
-    outputDiv.innerText = `✅ ${data.answer || "No response."}`;
-  } catch (error) {
-    outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
-    console.error("API Error:", error);
-  }
-}
+    function rewriteText() {
+      const inputText = document.getElementById("inputText").value.trim();
+      if (!inputText) return alert("Please enter some text.");
+      const prompt = `Rewrite the statement - ${inputText}`;
+      callAPI(prompt);
+    }
 
-function rewriteText() {
-  const inputText = document.getElementById("inputText").value.trim();
-  if (!inputText) return alert("Please enter some text.");
-  const prompt = `Rewrite the statement - ${inputText}`;
-  callAPI(prompt);
-}
-
-function translateText() {
-  const inputText = document.getElementById("inputText").value.trim();
-  if (!inputText) return alert("Please enter some text.");
-  const prompt = `Translate text ${inputText} to English. Only give answer.`;
-  callAPI(prompt);
-}
+    function translateText() {
+      const inputText = document.getElementById("inputText").value.trim();
+      if (!inputText) return alert("Please enter some text.");
+      const prompt = `Translate text ${inputText} to English. Only give answer.`;
+      callAPI(prompt);
+    }
   </script>
 </body>
 </html>
