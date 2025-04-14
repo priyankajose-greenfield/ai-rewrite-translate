@@ -63,38 +63,38 @@
     const proxy = "https://api.allorigins.win/get?url=";  // Use this proxy URL to bypass CORS
     const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
-    async function callAPI(promptText) {
-        const outputDiv = document.getElementById("output");
-        outputDiv.innerText = "⏳ Processing...";
+   async function callAPI(promptText) {
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerText = "⏳ Processing...";
 
-        const proxy = "https://cors-anywhere.herokuapp.com/";
-        const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
+  const proxy = "https://cors-anywhere.herokuapp.com/";
+  const apiUrl = "https://v354f29kg7.execute-api.us-east-1.amazonaws.com/dev/ask";
 
-      try {
-        const response = await fetch(proxy + apiUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ prompt: promptText }),
-        });
+  try {
+    const response = await fetch(proxy + apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt: promptText }),
+    });
 
-        if (!response.ok) {
-          throw new Error(`Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        // outputDiv.innerText = `✅ ${data.response || "No response."}`;
-
-        const outputTextarea = document.getElementById("inputText");
-        outputTextarea.value = ` ${data.response || ""}`;
-        outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
-        
-      } catch (error) {
-        outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
-        console.error("API Error:", error);
-      }
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
     }
+
+    const data = await response.json();
+    // outputDiv.innerText = `✅ ${data.response || "No response."}`;
+
+const outputTextarea = document.getElementById("inputText");
+outputTextarea.value = ` ${data.response || ""}`;
+outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
+    
+  } catch (error) {
+    outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
+    console.error("API Error:", error);
+  }
+}
 
 
     function rewriteText() {
@@ -112,35 +112,42 @@
     }
 
     async function askPdf() {
-        const apiUrl = "https://lr5xc0ydee.execute-api.us-east-1.amazonaws.com/dev/askpdf";
       
-        const requestBody = {
-          query: "what is the heat stress?",
-          agentId: "YUHKD18ID7",
-          agentAliasId: "YHLKVPNSIF"
-        };
-      
-        const outputDiv = document.getElementById("output");
-        outputDiv.innerText = "⏳ Asking PDF...";
-        try {
-          const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestBody)
-          });
-      
-          const data = await response.json();                
-          const outputTextarea = document.getElementById("inputText");
-          outputTextarea.value = ` ${data.body || ""}`;
-          outputDiv.innerText = `✅ ${data.body ? "Success" : "No response."}`;
-        } catch (error) {
-          outputDiv.innerText = "❌ Failed to fetch PDF info.";
-          console.error("Error calling PDF API:", error);
-        }
-      }
-    
+          const inputQuery = document.getElementById("inputText").value.trim();
+          if (!inputQuery) return alert("Please enter some text.");
+          const proxys = "https://cors-anywhere.herokuapp.com/";
+
+          const apiUrl = "https://lr5xc0ydee.execute-api.us-east-1.amazonaws.com/dev/askpdf";
+          const requestBody = {
+              query: inputQuery,
+              agentId: "YUHKD18ID7",
+              agentAliasId: "YHLKVPNSIF"
+          };
+          const outputDiv     = document.getElementById("output");
+          outputDiv.innerText = "⏳ Asking PDF...";
+          try {
+            const response = await fetch(proxys + apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            const data          = await response.json();
+            const parsedBody    = JSON.parse(data.body);
+            console.log(' DATA : '+data.body);
+            console.log(' BODY : '+parsedBody);
+            console.log(' BODY DETAILS: '+parsedBody.answer);
+            inputQuery.value    = parsedBody.answer || "";
+            outputDiv.innerText = `✅ ${parsedBody.answer ? "Success" : "No response."}`;
+
+
+          } catch (error) {
+            outputDiv.innerText = "❌ Failed to fetch PDF info.";
+            console.error("Error calling PDF API:", error);
+          }
+    }
 
   </script>
 </body>
