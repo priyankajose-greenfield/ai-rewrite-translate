@@ -113,8 +113,13 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
 
     async function askPdf() {
       
-          const inputQuery = document.getElementById("inputText").value.trim();
+
+          const inputField = document.getElementById("inputText");
+          const inputQuery = inputField.value.trim();
           if (!inputQuery) return alert("Please enter some text.");
+
+
+          
           const proxys = "https://cors-anywhere.herokuapp.com/";
 
           const apiUrl = "https://lr5xc0ydee.execute-api.us-east-1.amazonaws.com/dev/askpdf";
