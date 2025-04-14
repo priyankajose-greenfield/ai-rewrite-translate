@@ -145,7 +145,7 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
             console.log(' BODY : '+parsedBody);
             console.log(' BODY DETAILS: '+parsedBody.answer);
             inputField.value    = parsedBody.answer || "";
-            outputDiv.innerText = `✅ ${parsedBody.answer ? "Success" : "No response."}`;
+            outputDiv.innerText = `✅ ${parsedBody.answer ? parsedBody.answer : "No response."}`;
 
 
           } catch (error) {
