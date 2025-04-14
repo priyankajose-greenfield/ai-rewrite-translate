@@ -50,6 +50,8 @@
     <div class="d-flex justify-content-between mb-3">
       <button class="btn btn-primary" onclick="rewriteText()">✍️ Rewrite with AI</button>
       <button class="btn btn-success" onclick="translateText()">🌐 Translate</button>
+      <button class="btn btn-info" onclick="askPdf()">📘 Ask PDF</button>
+
     </div>
 
     <div id="output" class="alert alert-secondary" role="alert"> Waiting...
@@ -108,6 +110,41 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
       const prompt = `Translate text ${inputText} to English. Only give answer.`;
       callAPI(prompt);
     }
+
+    async function askPdf() {
+        const apiUrl = "https://lr5xc0ydee.execute-api.us-east-1.amazonaws.com/dev/askpdf";
+      
+        const requestBody = {
+          query: "what is the heat stress?",
+          agentId: "YUHKD18ID7",
+          agentAliasId: "YHLKVPNSIF"
+        };
+      
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerText = "⏳ Asking PDF...";
+        try {
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+          });
+      
+          const data = await response.json();                
+          const outputTextarea = document.getElementById("inputText");
+          outputTextarea.value = ` ${data.body || ""}`;
+          outputDiv.innerText = `✅ ${data.body ? "Success" : "No response."}`;
+        } catch (error) {
+          outputDiv.innerText = "❌ Failed to fetch PDF info.";
+          console.error("Error calling PDF API:", error);
+        }
+      }
+  } catch (error) {
+    outputDiv.innerText = `❌ Error calling the API:\n${error.message}`;
+    console.error("API Error:", error);
+  }
+}
   </script>
 </body>
 </html>
