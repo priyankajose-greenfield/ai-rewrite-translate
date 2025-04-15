@@ -51,6 +51,7 @@
       <button class="btn btn-primary" onclick="rewriteText()">✍️ Rewrite with AI</button>
       <button class="btn btn-success" onclick="translateText()">🌐 Translate</button>
       <button class="btn btn-info" onclick="askPdf()">📘 Ask PDF</button>
+      <button class="btn btn-primary" onclick="rewriteTextOS()">✍️ Rewrite with AI ( OS )</button>
 
     </div>
 
@@ -152,6 +153,43 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
             outputDiv.innerText = "❌ Failed to fetch PDF info.";
             console.error("Error calling PDF API:", error);
           }
+    }
+    
+    async function rewriteTextOS() {
+      
+      const inputField = document.getElementById("inputText");
+          const inputQuery = inputField.value.trim();
+          if (!inputQuery) return alert("Please enter some text.");
+
+
+          
+          const proxys = "https://cors-anywhere.herokuapp.com/";
+
+          const apiUrl = "https://4w0rkznzld.execute-api.ap-south-1.amazonaws.com/dev/GenAI_Text-GrammarCorrector";
+          const requestBody = {
+              text: inputQuery,
+          };
+          const outputDiv     = document.getElementById("output");
+          outputDiv.innerText = "⏳ Asking OS...";
+          try {
+            const response = await fetch(proxys + apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            const data          = await response.json();
+            inputField.value    = data.corrected_text || "";
+            outputDiv.innerText = `✅ ${data.corrected_text ? data.corrected_text : "No response."}`;
+
+
+          } catch (error) {
+            outputDiv.innerText = "❌ Failed to fetch PDF info.";
+            console.error("Error calling PDF API:", error);
+          }
+
     }
 
   </script>
