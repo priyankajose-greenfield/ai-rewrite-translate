@@ -218,8 +218,8 @@ async function translateTextwithBedrock() {
             });
 
             const data          = await response.json();
-            inputField.value    = data.corrected_text || "";
-            outputDiv.innerText = `✅ ${data.corrected_text ? data.corrected_text : "No response."}`;
+            inputField.value    = data.translation || "";
+            outputDiv.innerText = `✅ ${data.translation ? data.translation : "No response."}`;
 
 
           } catch (error) {
