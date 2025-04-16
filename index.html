@@ -51,9 +51,12 @@
       <button class="btn btn-primary" onclick="rewriteText()">✍️ Rewrite with AI</button>
       <button class="btn btn-success" onclick="translateText()">🌐 Translate</button>
       <button class="btn btn-info" onclick="askPdf()">📘 Ask PDF</button>
-      <button class="btn btn-primary" onclick="rewriteTextOS()">✍️ Rewrite with AI ( OS )</button>
+     
     </div>
-
+  <div class="d-flex justify-content-between mb-3">
+      <button class="btn btn-primary" onclick="rewriteTextOS()">✍️ Rewrite with AI ( OS )</button>
+      <button class="btn btn-success" onclick="translateTextwithBedrock()">🌐 Rewrite with Bedrock</button>
+    </div>
     <div id="output" class="alert alert-secondary" role="alert"> Waiting...
     </div>
   </div>
@@ -190,7 +193,40 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
           }
 
     }
+async function translateTextwithBedrock() {
+          const inputField = document.getElementById("inputText");
+          const inputQuery = inputField.value.trim();
+          if (!inputQuery) return alert("Please enter some text.");
 
+
+          
+          const proxys = "https://cors-anywhere.herokuapp.com/";
+          
+          const apiUrl = "https://ubtx4k7ufl.execute-api.us-east-1.amazonaws.com/dev/translate";
+          const requestBody = {
+              text: inputQuery,
+          };
+          const outputDiv     = document.getElementById("output");
+          outputDiv.innerText = "⏳ Asking Bedrock...";
+          try {
+            const response = await fetch(proxys + apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            const data          = await response.json();
+            inputField.value    = data.corrected_text || "";
+            outputDiv.innerText = `✅ ${data.corrected_text ? data.corrected_text : "No response."}`;
+
+
+          } catch (error) {
+            outputDiv.innerText = "❌ Failed to fetch PDF info.";
+            console.error("Error calling PDF API:", error);
+          }
+    }
   </script>
 </body>
 </html>
