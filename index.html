@@ -46,7 +46,9 @@
         placeholder="Type something..."
       ></textarea>
     </div>
-
+    <div class="d-flex justify-content-between mb-3">
+      <button class="btn btn-primary" onclick="rewriteTextNew()">✍️ Rewrite with AI - New</button>
+    </div>
     <div class="d-flex justify-content-between mb-3">
       <button class="btn btn-primary" onclick="rewriteText()">✍️ Rewrite with AI</button>
       <button class="btn btn-success" onclick="translateText()">🌐 Translate</button>
@@ -185,6 +187,40 @@ outputDiv.innerText = `✅ ${data.response ? "Success" : "No response."}`;
             const data          = await response.json();
             inputField.value    = data.corrected_text || "";
             outputDiv.innerText = `✅ ${data.corrected_text ? data.corrected_text : "No response."}`;
+
+
+          } catch (error) {
+            outputDiv.innerText = "❌ Failed to fetch PDF info.";
+            console.error("Error calling PDF API:", error);
+          }
+
+    }
+    
+    async function rewriteTextNew() {
+      
+      const inputField = document.getElementById("inputText");
+          const inputQuery = inputField.value.trim();
+          if (!inputQuery) return alert("Please enter some text.");          
+          const proxys = "https://cors-anywhere.herokuapp.com/";
+
+          const apiUrl = "https://5el2qyy5ql.execute-api.ap-south-1.amazonaws.com/dev/askdb";
+          const requestBody = {
+              question: inputQuery,
+          };
+          const outputDiv     = document.getElementById("output");
+          outputDiv.innerText = "⏳ Asking OS...";
+          try {
+            const response = await fetch(proxys + apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            const data          = await response.json();
+            inputField.value    = data.answer || "";
+            outputDiv.innerText = `✅ ${data.answer ? data.answer : "No response."}`;
 
 
           } catch (error) {
